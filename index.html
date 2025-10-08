@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>城市夜行筆記</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#0f1720;
+      --muted:#98a1ab;
+      --accent:#ffb86b;
+      --accent-2:#7bd389;
+      --glass: rgba(255,255,255,0.03);
+      --glass-2: rgba(255,255,255,0.04);
+      --card-border: rgba(255,255,255,0.06);
+      --radius:12px;
+      --max-width:900px;
+      --font-sans: "Microsoft JhengHei", "PingFang TC", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(123,211,137,0.04), transparent),
+                  radial-gradient(1000px 500px at 90% 90%, rgba(255,184,107,0.03), transparent),
+                  var(--bg);
+      color:#e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      padding:32px 20px;
+    }
+
+    header{
+      max-width:var(--max-width);
+      margin:0 auto 28px;
+      padding:20px 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:var(--radius);
+      border: 1px solid var(--card-border);
+      display:flex;
+      align-items:center;
+      gap:18px;
+      box-shadow: 0 6px 24px rgba(2,6,12,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    header .logo{
+      width:68px;
+      height:68px;
+      border-radius:10px;
+      background: linear-gradient(135deg, rgba(123,211,137,0.2), rgba(255,184,107,0.12));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      color:var(--bg);
+      font-size:1.2rem;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    header h1{
+      margin:0;
+      font-size:1.6rem;
+      letter-spacing:0.6px;
+    }
+    header p{
+      margin:0;
+      color:var(--muted);
+      font-size:0.95rem;
+    }
+
+    .container{
+      max-width:var(--max-width);
+      margin: 0 auto;
+    }
+
+    .controls{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      margin:18px 0;
+      align-items:center;
+    }
+
+    .controls .filter{
+      background:var(--glass);
+      border-radius:999px;
+      padding:8px 12px;
+      border:1px solid var(--card-border);
+      color:var(--muted);
+      font-size:0.95rem;
+    }
+
+    .entries{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:18px;
+    }
+
+    /* 每一篇筆記卡片 */
+    .entry{
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border-radius:12px;
+      padding:18px;
+      border:1px solid var(--card-border);
+      display:flex;
+      gap:18px;
+      align-items:flex-start;
+      box-shadow: 0 8px 30px rgba(2,6,12,0.6);
+      transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
+    }
+    .entry:hover{
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(2,8,18,0.7);
+    }
+
+    .thumb{
+      width:180px;
+      min-width:140px;
+      height:110px;
+      border-radius:10px;
+      overflow:hidden;
+      flex-shrink:0;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      transition: transform .6s ease;
+    }
+    .entry:hover .thumb img{ transform: scale(1.06); }
+
+    .entry .meta{
+      flex:1;
+      min-width:0;
+    }
+    .meta-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .date{
+      color:var(--muted);
+      font-size:0.9rem;
+    }
+    .mood{
+      font-weight:700;
+      color:var(--accent-2);
+      font-size:0.95rem;
+      letter-spacing:0.6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(123,211,137,0.06), rgba(123,211,137,0.02));
+      border:1px solid rgba(123,211,137,0.06);
+    }
+
+    .entry h2{
+      margin:8px 0 6px;
+      font-size:1.2rem;
+      color:#f2faf6;
+    }
+
+    .entry p{
+      margin:0 0 10px;
+      color: #dce9f3;
+      text-align: left;
+    }
+
+    .note{
+      font-size:0.9rem;
+      color:var(--muted);
+      font-style:italic;
+      margin-top:6px;
+    }
+
+    .links{
+      text-align:center;
+      margin:40px 0;
+    }
+    .links a{
+      display:inline-block;
+      margin:0 10px;
+      padding:10px 20px;
+      text-decoration:none;
+      color:#0b0f14;
+      background: linear-gradient(45deg, #ffb86b, #7bd389);
+      border-radius:20px;
+      transition:0.3s;
+      font-weight:600;
+      box-shadow:0 4px 12px rgba(0,0,0,0.4);
+    }
+    .links a:hover{
+      transform: translateY(-3px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.5);
+    }
+
+    footer{
+      max-width:var(--max-width);
+      margin:30px auto 0;
+      padding:16px 20px;
+      color:var(--muted);
+      text-align:center;
+      border-radius:10px;
+      border:1px solid var(--card-border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    }
+
+    /* small screens */
+    @media (max-width:700px){
+      header{flex-direction:row; gap:14px; padding:14px}
+      .thumb{width:120px; height:84px}
+      .entry{flex-direction:column; align-items:stretch}
+      .meta-top{flex-direction:row; justify-content:space-between}
+    }
+
+    /* accent underline for titles */
+    .entry h2::after{
+      content:"";
+      display:block;
+      width:48px;
+      height:4px;
+      border-radius:4px;
+      margin-top:8px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+    }
+  </style>
+  
+</head>
+<body>
+  <header>
+    <div class="logo">夜</div>
+    <div>
+      <h1>城市夜行筆記</h1>
+      <p>夜間散步、街燈、風聲與心情的碎片 — 記錄那些只有在夜裡才會注意到的細節。</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="controls" aria-hidden="true">
+      <div class="filter">分類：夜景 · 小吃 · 隨筆</div>
+      <div style="color:var(--muted); font-size:0.95rem">城市筆記 / 2025 秋</div>
+    </div>
+
+    <div class="entries">
+      <!-- Entry 1 -->
+      <article class="entry">
+        <div class="thumb">
+          <img src="https://p7.itc.cn/q_70/images03/20210209/56ee7b70d5e74e23838741b536a52100.png" alt="街燈下的長椅">
+        </div>
+        <div class="meta">
+          <div class="meta-top">
+            <div class="date">2025 年 10 月 3 日 · 22:12</div>
+            <div class="mood">靜謐</div>
+          </div>
+          <h2>街燈下的長椅</h2>
+          <p>路邊長椅只剩一人，他抱著外套像是要把整個秋夜裹住。街燈撒下溫暖的圓圈，腳步聲在遠處拉長。想像他在等誰，還是只是在等自己。</p>
+          <p class="note">觀察重點：燈色偏暖、路人稀少、夜晚的聲音放大了記憶。</p>
+        </div>
+      </article>
+
+      <!-- Entry 2 -->
+      <article class="entry">
+        <div class="thumb">
+          <img src="https://www.newsmarket.com.tw/files/2021/09/127000484_3713112952073457_2770547328791464107_n.jpg" alt="小吃攤的燈">
+        </div>
+        <div class="meta">
+          <div class="meta-top">
+            <div class="date">2025 年 10 月 4 日 · 20:05</div>
+            <div class="mood">溫暖</div>
+          </div>
+          <h2>巷口的烤玉米</h2>
+          <p>攤販把玉米烤得焦香，撒上秘製醬料。煙與調味料的香氣在巷子裡打轉，讓人忘記了白天的匆忙。買一根、站在攤邊，看著街角的光。</p>
+          <p class="note">小提醒：拍照時降低 ISO，保留暖色調，可以更有夜市感。</p>
+        </div>
+      </article>
+
+      <!-- Entry 3 -->
+      <article class="entry">
+        <div class="thumb">
+          <img src="https://scontent-tpe1-1.xx.fbcdn.net/v/t39.30808-6/505778780_4494884160738623_5473717560776394121_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=0b6b33&_nc_ohc=kfgLdltXO-gQ7kNvwH3CN3l&_nc_oc=AdnOyoTKj-WDBtixLWAk2fVTmtvEU62lQ5bR9pN3LJEjXFrPPxoPyO4Ghb0liom0d5k&_nc_zt=23&_nc_ht=scontent-tpe1-1.xx&_nc_gid=2eYVjfoGzIRSTX17kdQMJg&oh=00_AfdMHtXL6jeZyeeB7VNCL0yG0GMtN06Kqrbdkp-XifteYw&oe=68EBBDEF" alt="河邊夜景">
+        </div>
+        <div class="meta">
+          <div class="meta-top">
+            <div class="date">2025 年 10 月 7 日 · 23:40</div>
+            <div class="mood">沉思</div>
+          </div>
+          <h2>河邊的倒影</h2>
+          <p>河面把城市的霓虹攪碎，像用鋼琴鍵排列的光。坐在欄杆上，聽著水聲，思緒不知怎麼就回到了某個曾經的夜晚。</p>
+          <p class="note">筆記：帶一件薄外套，河邊風大；嘗試長曝光 6~10 秒拍出倒影的流動感。</p>
+        </div>
+      </article>
+
+    </div>
+    <div class="links">
+      <a href="https://www.instagram.com/" target="_blank">📸 IG相簿</a>
+      <a href="https://www.youtube.com/" target="_blank">🎬夜行影片</a>
+      <a href="mailto:nightwalk@example.com">📩聯絡夜行筆記</a>
+    </div>
+
+    <footer>
+      &copy; 2025 城市夜行筆記 — 記錄每一次不想被白天看見的安靜。
+    </footer>
+  </div>
+</body>
+</html>
